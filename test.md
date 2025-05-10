@@ -1,1 +1,33 @@
-1.4.2. Secondary Objectives 1.4.2.1. To implement comprehensive user profile management, allowing users to customize personal details, profile images, and maintain a list of their reading interests (book categories). 1.4.2.2. To facilitate diverse book discovery mechanisms, including browsing by specific categories, fuzzy search capabilities, a "discover" page for books outside user interests, and recently viewed books. 1.4.2.3. To ensure a user-friendly, intuitive, and responsive interface for seamless navigation and interaction across desktop and mobile devices. 1.4.2.4. To implement features for liking books and managing favorite lists, distinct from and complementary to the agentic AI management. 1.5. Scope of the Project 1.5.1. In-Scope Features and Functionalities: * User registration, authentication (username/email/phone & password), and profile management (first name, last name, email, phone, gender, profile picture, interests). * CRUD operations for books, authors, and categories (primarily for admin/reviewer roles). * AI-driven book category recommendation based on natural language chat. * AI-driven book information retrieval from uploaded cover images. * Agentic AI for managing favorite books and reading statuses via natural language chat (view all, count, add, remove, set status, show summary, show specific status). * Reading status tracking (to_read, reading, completed) with current page progress updates. * Book review and comment system with VADER sentiment analysis. * Liking books and managing a separate "favorites" list through UI interactions. * Display of user-specific lists: favorites, to-read, currently reading, completed, recently viewed, liked books, user's comments. * Fuzzy search for books, authors, categories, and series. * Search suggestions feature. * Display of events. * User profile pages showcasing interests, activity, and lists. * Distinction between regular users and reviewers (with specific functionalities like congratulations page).
+**9.1. Software and Cloud Services:**
+*   Python, Django.
+*   Google Generative AI (Gemini) API access (requires API key and potentially associated costs depending on usage beyond free tiers).
+*   Git and a remote repository provider (e.g., GitHub).
+*   PythonAnywhere hosting account.
+*   Standard development text editors/IDEs.
+**9.2. Hardware (Development Machines):**
+*   Standard laptops/desktop computers capable of running web browsers, IDEs, and development servers.
+*   Webcams (for testing image capture for Book Finder feature).
+**9.3. Human Resources (Skills):**
+*   **Member A:** Strong Python/Django backend development skills, experience or willingness to learn AI/LLM API integration, database design, RESTful API principles, asynchronous programming (SSE).
+*   **Member B:** Strong HTML, CSS, JavaScript frontend development skills, experience with DOM manipulation, AJAX, client-side API integration, UI/UX design principles.
+*   Both members: Problem-solving skills, ability to learn new technologies quickly, good communication and collaboration.
+10. Potential Challenges and Mitigation Strategies
+**10.1. Technical Challenges:**
+    *   **Challenge:** Complexity of prompt engineering for reliable AI agent behavior.
+        *   **Mitigation:** Iterative design and testing of prompts. Start with simpler commands and gradually increase complexity. Detailed logging of AI interactions.
+    *   **Challenge:** Latency in external AI API responses affecting user experience.
+        *   **Mitigation:** Use streaming responses (SSE) wherever possible. Optimize prompts. Explore caching for non-highly dynamic AI outputs. Clearly indicate loading states in the UI.
+    *   **Challenge:** Securely managing AI API keys.
+        *   **Mitigation:** **PRIORITY:** For client-side AI calls, implement a backend proxy endpoint. For server-side calls, use environment variables immediately and avoid committing keys to Git.
+    *   **Challenge:** Handling errors and unexpected outputs from LLMs.
+        *   **Mitigation:** Implement robust error handling in API call wrappers. Design fallback mechanisms. Allow users to retry or rephrase if an AI interaction fails.
+**10.2. Data Challenges:**
+    *   **Challenge:** Populating an initial book catalog for meaningful recommendations and search.
+        *   **Mitigation:** Start with a smaller, manually curated dataset for development. Plan for integration with book data APIs (e.g., Google Books API, OpenLibrary) for future scaling (though out of scope for initial MVP).
+    *   **Challenge:** Ensuring quality and consistency of book data.
+        *   **Mitigation:** Implement validation in forms and model saving. Consider data cleaning scripts if importing data.
+**10.3. User Adoption Challenges (Post-development):**
+    *   **Challenge:** Educating users on how to effectively use the AI chat features.
+        *   **Mitigation:** Provide clear onboarding tips, example prompts, and contextual help within the AI interfaces.
+    *   **Challenge:** Building trust in AI recommendations and actions.
+        *   **Mitigation:** Ensure transparency (clearly label AI features), allow users to override AI suggestions/actions, and provide explanations for recommendations where feasible.
