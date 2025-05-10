@@ -1,12 +1,33 @@
-**6.1. Novel Application of Agentic AI for Personalized Library Management:**
-While AI agents are emerging, their application to allow users to manage personal data like book lists through natural language commands within a dedicated platform is a relatively unexplored and powerful paradigm. This goes beyond simple chatbots by having the AI take direct, stateful actions within the user's account.
+**5.1. In-Scope Features (Target for initial functional prototype/MVP and planned extensions):**
+*   **MVP (Core):**
+    *   User registration, login, basic profile (name, interests).
+    *   Ability to add/view books, categories, authors (admin/manual input).
+    *   AI Conversational Category Discovery (text-based).
+    *   Homepage recommendations based on selected interests.
+    *   Book detail pages.
+    *   Basic reading status tracking (To Read, Reading, Completed).
+    *   Core Agentic AI functionality for managing favorites (add, remove, view).
+*   **Planned Extensions (within project timeframe):**
+    *   Full user profile features (image, phone, gender).
+    *   AI Agent expansion to cover all reading statuses and potentially more commands.
+    *   Image-to-Info book identification.
+    *   Commenting system with VADER sentiment analysis.
+    *   Liking books.
+    *   Fuzzy search and search suggestions.
+    *   Recently viewed, User's specific lists display.
+    *   Deployment to PythonAnywhere.
 
-**6.2. Deep Personalization through Conversational NLP for Interest Discovery:**
-Instead of relying solely on predefined tags or browsing history, BookVerse AI empowers users to articulate their often complex and nuanced reading interests in a natural conversation with an AI. This method has the potential to achieve a much deeper level of understanding and, consequently, more relevant recommendations.
+**5.2. Out-of-Scope Features (for this project iteration):**
+*   E-commerce (buying/selling books).
+*   Advanced collaborative filtering or deep learning-based recommendation algorithms.
+*   Real-time social networking features (user-to-user messaging, following users).
+*   Mobile native applications.
+*   Automated large-scale book data ingestion from external APIs.
+*   Subscription models or payment processing.
 
-**6.3. Synergy of Multiple AI Modalities:**
-The project uniquely combines:
-*   **Conversational AI:** For interest discovery and agentic control.
-*   **Vision AI:** For book identification from cover images.
-*   **NLP for Sentiment Analysis:** For enriching the review system.
-This synergistic use of different AI capabilities within a single, cohesive platform focused on literature is a distinctive aspect.
+**5.3. Key Deliverables:**
+1.  A fully functional, deployed BookVerse AI web application on PythonAnywhere.
+2.  Source code repository (Git) with all backend and frontend code.
+3.  This comprehensive Project Proposal document.
+4.  A Final Project Report detailing design, implementation, results, and CEP mapping.
+5.  A project presentation and video demonstration.
