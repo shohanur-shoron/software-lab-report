@@ -1,30 +1,109 @@
-The development of BookVerse AI necessitated careful consideration of several ethical dimensions, aligning with **CO5 (Identify societal, health, safety, legal and cultural issues)** and **CO6 (Practice professional ethics and responsibilities)**:
-*   **Data Privacy (CO5, CO6):** The collection and storage of user data (profiles, interests, reading activity) were managed with Django's built-in security features. However, the team recognized the need for a comprehensive privacy policy and more robust data management practices (e.g., data export/deletion options) in a scaled-up production environment to fully uphold user privacy rights and legal obligations.
-*   **AI Bias (CO5, CO6):** The team acknowledged the potential for biases in LLM-generated recommendations and content. While efforts like using a fixed category list for initial AI recommendations were made, ongoing vigilance and strategies for bias mitigation (e.g., diversifying training data or post-processing outputs) are recognized as essential ethical responsibilities to ensure fairness and inclusivity.
-*   **Transparency in AI Interaction (CO5, CO6):** The project aimed for transparency by clearly labeling AI-driven interfaces. This fulfills the ethical norm of not deceiving users and allows them to understand the nature of their interaction.
-*   **Security of Sensitive Information (CO5, CO6):** The initial handling of API keys was identified as a critical security and ethical lapse. Recognizing this flaw and understanding the need to implement secure practices (environment variables, backend proxies) demonstrates an evolving understanding of professional responsibility and security norms.
-*   **Reliability of Information (CO5):** The team understood that AI-generated content can sometimes be inaccurate. While prompts were designed to minimize open-ended factual generation, this remains an ethical consideration regarding the information presented to users.
-8.3. Application of Engineering Standards and Best Practices (Again, this can draw from the previous Section 8.3, but frame it through the lens of course expectations if possible.)
-The project endeavored to apply sound engineering standards and best practices, contributing to the quality and maintainability of the solution, in line with **CO1, CO3, and CO4**:
-*   **Structured Development (CO1, CO3):** The adoption of Django's MVT architecture and the organization of the project into distinct applications (`users`, `book`, `agent_chat`, `mainpages`) provided a structured and modular development environment.
-*   **Use of Modern Tools and Technologies (CO4):** The selection of Python, Django, JavaScript, Git, and Google Generative AI reflects the use of current and industry-relevant tools.
-*   **Version Control (CO9):** Consistent use of Git facilitated collaborative development and code management.
-*   **Database Design (CO3):** A normalized relational database schema was designed and implemented using Django's ORM, which is a standard practice for data-driven applications.
-*   **Security Practices (CO6 - Partial):** While Django's inherent security features (CSRF, XSS protection) were leveraged, the project highlighted areas (API key management) where further adherence to security best practices is critical.
-*   **Code Documentation (CO8 - This Report):** This comprehensive report serves as a key piece of documentation, explaining the design, implementation, and rationale behind the project, fulfilling a crucial aspect of software engineering practice and SQA (Software Quality Assurance) as mentioned in the course synopsis.
-*   **Open Source Preference (Course Synopsis):** The project leverages many open-source technologies (Python, Django, SQLite, numerous libraries) and, if the codebase were to be made open-source, it would align with the course's preference for open-source projects that encourage community collaboration and improvement.
-8.4. Sustainability and Societal Impact (Refer to previous detail, emphasizing connections to CO5 and the "real life oriented project" aspect.)
-The BookVerse AI project, as a solution to a real-life problem of information overload and personalized content discovery (**CO2**), has both sustainability aspects and broader societal impacts (**CO5**):
-*   **Sustainability:**
-    *   The reliance on cloud-based AI APIs means the direct energy footprint of model execution is managed by the provider (Google). Efficient API call strategies (e.g., minimizing unnecessary calls, prompt optimization) could contribute to computational sustainability.
-    *   The maintainability of the Django codebase, due to its structured nature, contributes to the long-term sustainability of the software itself.
-*   **Societal Impact (CO5):**
-    *   **Positive:** By making book discovery more intuitive and personalized, BookVerse AI can promote literacy and engagement with diverse literature. The AI agent can empower users by simplifying complex list management tasks. The platform can potentially foster a community around reading through its review features.
-    *   **Potential Challenges:** As discussed under ethics, issues like AI bias, the digital divide, and filter bubbles are societal challenges that platforms like BookVerse AI must proactively address to ensure equitable and beneficial impact.
-8.5. Development of Professional Skills (Refer to previous detail, linking to COs, especially CO10 for lifelong learning.)
-This project was instrumental in developing a wide array of professional skills pertinent to software engineering and AI development, aligning strongly with **CO10 (Lifelong learning and adaptation to modern tools)** and reinforcing other COs:
-*   **Technical Proficiency (CO1, CO3, CO4):** Deepened expertise in full-stack development with Python/Django, JavaScript, and advanced AI integration (Gemini SDKs, prompt engineering, SSE).
-*   **Complex Problem-Solving (CO2, and as per CEP definition):** Successfully navigated the challenges of designing and implementing a multi-component system with novel AI interactions.
-*   **Adaptability and Independent Learning (CO10):** Mastered new APIs and techniques related to LLMs and SSE, which are rapidly evolving fields requiring continuous self-learning.
-*   **Teamwork and Communication (CO7, CO8):** Successfully collaborated as a two-member team to integrate complex backend and frontend components. The creation of this detailed documentation also hones communication skills.
-*   **Ethical Awareness (CO5, CO6):** Gained practical insight into the ethical responsibilities associated with developing AI-driven applications.
+*   **`django.contrib.auth.models.User` (Built-in Django Model):**
+    *   `username`: CharField (unique)
+    *   `password`: CharField (hashed)
+    *   `email`: EmailField (optional, can be unique)
+    *   `first_name`: CharField
+    *   `last_name`: CharField
+    *   `is_staff`, `is_active`, `is_superuser`: BooleanFields
+    *   `date_joined`, `last_login`: DateTimeFields
+
+*   **`users.models.Profile`:**
+    *   `user`: OneToOneField to `User` (CASCADE delete, null, blank)
+    *   `image`: ImageField (upload_to='proPic/original', null, blank)
+    *   `phone`: CharField (max_length=20)
+    *   `gender`: CharField (max_length=20, null, blank)
+    *   `is_user`: BooleanField (default=False)
+    *   `is_reviewer`: BooleanField (default=False)
+    *   `interests`: ManyToManyField to `book.Category` (related_name='interests', blank, null)
+    *   `total_reviews`: IntegerField (default=0)
+    *   `total_views`: IntegerField (default=0)
+    *   `__str__`: Returns `self.user.first_name`
+
+*   **`book.models.Category`:**
+    *   `name`: CharField (max_length=100)
+    *   `description`: TextField (null, blank)
+    *   `added_by`: ForeignKey to `User` (CASCADE delete, null, blank)
+    *   `is_active`: BooleanField (default=False)
+    *   `__str__`: Returns f"{self.name} added by {self.added_by}"
+
+*   **`book.models.Author`:**
+    *   `name`: CharField (max_length=100)
+    *   `image`: ImageField (upload_to='author_images/', blank, null)
+    *   `followers`: ManyToManyField to `User` (related_name='followers', blank)
+    *   `addedBy`: ForeignKey to `User` (related_name='addedBy', CASCADE delete, blank, null)
+    *   `__str__`: Returns f"{self.name} added by {self.addedBy}"
+
+*   **`book.models.Book`:**
+    *   `name`: CharField (max_length=100)
+    *   `image`: ImageField (upload_to='book_images/', blank, null)
+    *   `description`: TextField
+    *   `category`: ForeignKey to `Category` (CASCADE delete)
+    *   `price`: PositiveIntegerField (default=0)
+    *   `authors`: ForeignKey to `Author` (CASCADE delete, null, blank)
+    *   `publisher`: ForeignKey to `User` (CASCADE delete, null, blank)
+    *   `total_views`: PositiveIntegerField (default=0)
+    *   `rating`: PositiveIntegerField (default=0) *(Note: This seems to be a distinct field from comment ratings; consider how it's populated or if it's an aggregate)*
+    *   `suggestions`: TextField (blank, null)
+    *   `link`: URLField (blank, null)
+    *   `link_clicked`: PositiveIntegerField (default=0)
+    *   `likes_counter`: PositiveIntegerField (default=0)
+    *   `likes`: ManyToManyField to `User` (related_name='likes', blank)
+    *   `published_time`: DateField (auto_now_add=True)
+    *   `pages`: CharField (max_length=80, null, blank) *(Consider IntegerField if always numeric)*
+    *   `language`: CharField (max_length=100, blank, null)
+    *   `chapters`: CharField (max_length=50, null, blank) *(Consider IntegerField)*
+    *   `favorites_chapters`: CharField (max_length=50, null, blank)
+    *   `favorites_quotes`: TextField (blank, null)
+    *   `series`: CharField (max_length=100, blank, null)
+    *   `best_character`: CharField (max_length=100, blank, null)
+    *   `awards`: TextField (blank, null)
+    *   `format`: CharField (max_length=50, choices=[('Hardcover', 'Hardcover'), ...], blank, null)
+    *   `get_absolute_url`: Method returning reverse('library:book_detail', ...)
+    *   `__str__`: Returns f'{self.name} by {self.authors.name} book'
+
+*   **`book.models.Favorite`:** (Explicit user favorites list)
+    *   `book`: ForeignKey to `Book` (CASCADE delete)
+    *   `user`: ForeignKey to `User` (CASCADE delete)
+    *   `timestamp`: DateTimeField (auto_now_add=True)
+    *   `__str__`: Returns `self.book.name`
+
+*   **`book.models.ReadingStatus`:**
+    *   `book`: ForeignKey to `Book` (CASCADE delete)
+    *   `user`: ForeignKey to `User` (CASCADE delete)
+    *   `status`: CharField (max_length=20, choices=[('to_read', 'To Read'), ...])
+    *   `current_page`: PositiveIntegerField (default=0)
+    *   `last_updated`: DateTimeField (auto_now=True)
+
+*   **`book.models.Event`:**
+    *   `name`: CharField (max_length=100)
+    *   `description`: TextField (null, blank)
+    *   `timestamp`: DateTimeField *(Note: In the code, this is just `DateTimeField()`, might need `default=timezone.now` or `auto_now_add=True` depending on intent)*
+    *   `image`: ImageField (upload_to='event_images/', blank, null)
+    *   `ongoing`: BooleanField (default=False)
+    *   `is_valid`: BooleanField (default=False)
+    *   `__str__`: Returns f'{self.name} - {self.is_valid}'
+
+*   **`book.models.MyEvent`:** (User's participation in events)
+    *   `user`: ForeignKey to `User` (CASCADE delete)
+    *   `event`: ForeignKey to `Event` (CASCADE delete)
+    *   `timestamp`: DateTimeField (auto_now_add=True)
+    *   `__str__`: Returns f"{self.user} {self.event.name}"
+
+*   **`book.models.Comment`:**
+    *   `book`: ForeignKey to `Book` (CASCADE delete, related_name='comments')
+    *   `user`: ForeignKey to `User` (CASCADE delete, related_name='comments')
+    *   `text`: TextField
+    *   `textSentimentScore`: FloatField (null, blank)
+    *   `sentimentCategory`: CharField (max_length=50, null, blank)
+    *   `rating`: IntegerField (validators=[MinValueValidator(1), MaxValueValidator(5)])
+    *   `created_at`: DateTimeField (auto_now_add=True)
+    *   `updated_at`: DateTimeField (auto_now=True)
+    *   `Meta`: `ordering = ['-created_at']`
+    *   `__str__`: Returns f'Comment by {self.user.username} on {self.book.name}'
+
+*   **`book.models.RecentlyViewedBook`:**
+    *   `user`: ForeignKey to `User` (CASCADE delete, related_name='recently_viewed')
+    *   `book`: ForeignKey to `Book` (CASCADE delete)
+    *   `timestamp`: DateTimeField (auto_now=True)
+    *   `Meta`: `ordering = ['-timestamp']`, `unique_together = ('user', 'book')`
+    *   `__str__`: Returns f"{self.user.username} viewed {self.book.name} at {self.timestamp}"
